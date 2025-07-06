@@ -32,10 +32,6 @@ function App() {
       })
   },[])
 
-  useEffect(() => {
-    console.log(convertedValue)
-  },[convertedValue])
-
   function handleChange(chosenCurrency: string, currencyType: CurrencyTypes) {
     if(currencyType==='Source') setSourceCurrency(chosenCurrency)
     else setConvertedCurrency(chosenCurrency)
