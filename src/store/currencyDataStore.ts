@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type {CurrencyOptions} from "../interfaces/ApiInterfaces.ts";
 import type {CurrencyTypes} from "../interfaces/PropInterfaces.ts";
+import {sourceCurrencyType} from "../util/globalStrings.ts";
 
 interface CurrencyDataState {
   currencyList: CurrencyOptions[];
@@ -25,7 +26,7 @@ const useCurrencyDataStore = create((set) => ({
   },
   actions: {
     setCurrency: (newSourceCurrency: string, currencyType: CurrencyTypes) => set((state: CurrencyDataState) => {
-      if(currencyType==='Source') return ({...state, sourceCurrencyData: {...state.sourceCurrencyData, sourceCurrencyCode: newSourceCurrency}})
+      if(currencyType===sourceCurrencyType) return ({...state, sourceCurrencyData: {...state.sourceCurrencyData, sourceCurrencyCode: newSourceCurrency}})
       else return ({...state, convertedCurrencyData: {...state.convertedCurrencyData, convertedCurrencyCode: newSourceCurrency}})
     }),
     setConvertedCurrency: (newConvertedCurrency: string) =>
@@ -43,7 +44,7 @@ export const useSourceCurrency = () => useCurrencyDataStore((state) => state.sou
 export const useSourceValue = () => useCurrencyDataStore((state) => state.sourceCurrencyData.sourceCurrencyValue);
 export const useConvertedCurrency = () => useCurrencyDataStore((state) => state.convertedCurrencyData.convertedCurrencyCode);
 export const useConvertedValue = () => useCurrencyDataStore((state) => state.convertedCurrencyData.convertedCurrencyValue);
-export const useHasSelectedValue = (currencyType: CurrencyTypes) => useCurrencyDataStore((state) => (currencyType==='Source')?state.sourceCurrencyData.sourceCurrencyValue!=='':state.convertedCurrencyData.convertedCurrencyValue!=='');
+export const useHasSelectedValue = (currencyType: CurrencyTypes) => useCurrencyDataStore((state) => (currencyType===sourceCurrencyType)?state.sourceCurrencyData.sourceCurrencyValue!=='':state.convertedCurrencyData.convertedCurrencyValue!=='');
 // 🎉 one selector for all our actions
 export const useCurrencyDataActions = () =>
   useCurrencyDataStore((state) => state.actions)

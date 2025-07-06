@@ -7,7 +7,7 @@ import type {CurrencyOptions} from "./interfaces/ApiInterfaces.ts";
 import ConvertButton from "./components/ConvertButton.tsx";
 import CurrencyInput from './components/CurrencyInput.tsx';
 import CurrencyConversion from "./components/CurrencyConversion.tsx";
-import {intialLoad} from "./util/globalStrings.ts";
+import {convertedCurrencyType, intialLoad, sourceCurrencyType} from "./util/globalStrings.ts";
 import {useCurrencyDataActions, useCurrencyList} from "./store/currencyDataStore.ts";
 import {useAlertError, useApiStatusActions, useIsInitialLoad} from "./store/apiStatusStore.ts";
 
@@ -46,13 +46,13 @@ function App() {
               <Grid container columnSpacing={2} rowSpacing={2} sx={{justifyContent: "center", alignItems: "center"}}>
                   <Grid size={6}>
                       <CurrencyDropdown
-                        currencyType='Source'
+                        currencyType={sourceCurrencyType}
                         options={currencyList}
                       />
                   </Grid>
                   <Grid size={6}>
                       <CurrencyDropdown
-                        currencyType='Converted'
+                        currencyType={convertedCurrencyType}
                         options={currencyList}
                       />
                   </Grid>

@@ -1,6 +1,7 @@
 import type {CurrencyOptions} from "./ApiInterfaces.ts";
+import {convertedCurrencyType, sourceCurrencyType} from "../util/globalStrings.ts";
 
-export type CurrencyTypes = 'Source'|'Converted';
+export type CurrencyTypes = sourceCurrencyType|convertedCurrencyType;
 export interface CurrencyDropDownInterface {
     currencyType: CurrencyTypes;
     options: CurrencyOptions[];
