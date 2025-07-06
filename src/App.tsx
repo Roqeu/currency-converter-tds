@@ -1,67 +1,40 @@
 import './App.css'
-import {Alert, Box, Card, CardContent, CircularProgress, Grid, Modal} from "@mui/material";
+import {Alert, Card, CardContent, CircularProgress, Grid, Modal} from "@mui/material";
 import CurrencyDropdown from "./components/CurrencyDropdown.tsx";
-import {useEffect, useState} from "react";
-import {convertValue, getCurrencies} from "./service/appService.ts";
-import type {CurrencyOptions, LoadingState} from "./interfaces/ApiInterfaces.ts";
-import type {CurrencyTypes} from "./interfaces/PropInterfaces.ts";
+import {useEffect} from "react";
+import {getCurrencies} from "./service/appService.ts";
+import type {CurrencyOptions} from "./interfaces/ApiInterfaces.ts";
 import ConvertButton from "./components/ConvertButton.tsx";
 import CurrencyInput from './components/CurrencyInput.tsx';
 import CurrencyConversion from "./components/CurrencyConversion.tsx";
-import {conversionLoad, intialLoad} from "./util/globalStrings.ts";
+import {intialLoad} from "./util/globalStrings.ts";
+import {useCurrencyDataActions, useCurrencyList} from "./store/currencyDataStore.ts";
+import {useAlertError, useApiStatusActions, useIsInitialLoad} from "./store/apiStatusStore.ts";
 
 function App() {
-  const [currencyList, setCurrencyList] = useState<CurrencyOptions[]>([]);
-  const [sourceCurrency, setSourceCurrency] = useState<string>('');
-  const [convertedCurrency, setConvertedCurrency] = useState<string>('');
-  const [sourceValue, setSourceValue] = useState<number>(0);
-  const [convertedValue, setConvertedValue] = useState<number>(0);
-  const [appLoading, setAppLoading] = useState<LoadingState>('');
-  const [showError, setShowError] = useState<boolean>(false);
-  const [alertError, setAlertError] = useState<string>('');
+  // const [currencyList, setCurrencyList] = useState<CurrencyOptions[]>([]);
+  const { setCurrencyList } = useCurrencyDataActions();
+  const { setSuccessfulApiCall, setFailedApiCall, setAppLoading } = useApiStatusActions();
+  const currencyList: CurrencyOptions[] = useCurrencyList();
+  const alertError = useAlertError();
+  const isInitialLoad = useIsInitialLoad();
 
   useEffect(() => {
     setAppLoading(intialLoad)
     getCurrencies()
       .then((res: CurrencyOptions[]) => {
         setCurrencyList(res)
-        setAppLoading("")
-        setAlertError("")
+        setSuccessfulApiCall()
       })
-      .catch(() => {
-        setAlertError("Something went wrong fetching currency list.\nPlease check thst you have provided a valid API_KEY and the CurrencyBeacon is live.")
+      .catch((err) => {
+        setFailedApiCall(err.message)
       })
   },[])
-
-  function handleChange(chosenCurrency: string, currencyType: CurrencyTypes) {
-    if(currencyType==='Source') setSourceCurrency(chosenCurrency)
-    else setConvertedCurrency(chosenCurrency)
-  }
-
-  function convertCurrency() {
-    if(convertedCurrency!==""&&sourceCurrency!=="") {
-      setShowError(false)
-      setAppLoading(conversionLoad)
-      convertValue(sourceCurrency, convertedCurrency, sourceValue)
-        .then((res: number) => {
-          setConvertedValue(res);
-          setAppLoading("")
-          setAlertError("")
-        })
-        .catch((err: Error) => {
-          console.log(err)
-          setAppLoading("")
-        })
-    } else {
-      setShowError(true)
-    }
-
-  }
 
   return (
     <>
       <Modal
-        open={appLoading===intialLoad}
+        open={isInitialLoad}
         aria-label={"app loading"}
         sx={{display:'flex',alignItems:'center',justifyContent:'center'}}
       >
@@ -75,29 +48,22 @@ function App() {
                       <CurrencyDropdown
                         currencyType='Source'
                         options={currencyList}
-                        handleChange={handleChange}
-                        isError={showError&&sourceCurrency===""}
                       />
                   </Grid>
                   <Grid size={6}>
                       <CurrencyDropdown
                         currencyType='Converted'
                         options={currencyList}
-                        handleChange={handleChange}
-                        isError={showError&&convertedCurrency===""}
                       />
                   </Grid>
                   <Grid size={6}>
-                      <CurrencyInput handleChange={setSourceValue}/>
+                      <CurrencyInput/>
                   </Grid>
                   <Grid size={6}>
-                      <CurrencyConversion convertedValue={convertedValue}/>
+                      <CurrencyConversion/>
                   </Grid>
                   <Grid size={4}>
-                      <ConvertButton
-                        startConversion={convertCurrency}
-                        loading={appLoading===conversionLoad}
-                      />
+                      <ConvertButton/>
                   </Grid>
               </Grid>
           </CardContent>

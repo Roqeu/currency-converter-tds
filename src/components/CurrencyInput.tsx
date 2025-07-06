@@ -1,11 +1,11 @@
-import type {CurrencyInputInterface} from "../interfaces/PropInterfaces.ts";
 import NumberDisplay from "./NumberDisplay.tsx";
+import {useCurrencyDataActions} from "../store/currencyDataStore.ts";
 
-export default function CurrencyInput({
-                                        handleChange
-                                      }: CurrencyInputInterface) {
+export default function CurrencyInput() {
+
+  const { setSourceValue } = useCurrencyDataActions();
 
   return(
-    <NumberDisplay inputType={"Source"} value={0} handleChange={handleChange} isReadOnly={false} />
+    <NumberDisplay inputType={"Source"} value={0} handleChange={setSourceValue} isReadOnly={false} />
   )
 }
