@@ -8,6 +8,7 @@ import type {CurrencyTypes} from "./interfaces/PropInterfaces.ts";
 import ConvertButton from "./components/ConvertButton.tsx";
 import CurrencyInput from './components/CurrencyInput.tsx';
 import CurrencyConversion from "./components/CurrencyConversion.tsx";
+import {conversionLoad, intialLoad} from "./util/globalStrings.ts";
 
 function App() {
   const [currencyList, setCurrencyList] = useState<CurrencyOptions[]>([]);
@@ -20,7 +21,7 @@ function App() {
   const [alertError, setAlertError] = useState<string>('');
 
   useEffect(() => {
-    setAppLoading("INITIAL_LOAD")
+    setAppLoading(intialLoad)
     getCurrencies()
       .then((res: CurrencyOptions[]) => {
         setCurrencyList(res)
@@ -40,7 +41,7 @@ function App() {
   function convertCurrency() {
     if(convertedCurrency!==""&&sourceCurrency!=="") {
       setShowError(false)
-      setAppLoading("CURRENCY_CONVERSION")
+      setAppLoading(conversionLoad)
       convertValue(sourceCurrency, convertedCurrency, sourceValue)
         .then((res: number) => {
           setConvertedValue(res);
@@ -59,7 +60,7 @@ function App() {
 
   return (
     <>
-      <Modal open={appLoading==="INITIAL_LOAD"} aria-label={"app loading"}><CircularProgress/></Modal>
+      <Modal open={appLoading===intialLoad} aria-label={"app loading"}><CircularProgress/></Modal>
       {(alertError!=='')&&<Alert severity="error"><>{alertError}</></Alert>}
       <Card>
           <CardContent>
@@ -89,7 +90,7 @@ function App() {
                   <Grid size={4}>
                       <ConvertButton
                         startConversion={convertCurrency}
-                        loading={appLoading==='CURRENCY_CONVERSION'}
+                        loading={appLoading===conversionLoad}
                       />
                   </Grid>
               </Grid>

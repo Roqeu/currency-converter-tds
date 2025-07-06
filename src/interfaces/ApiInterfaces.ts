@@ -1,3 +1,5 @@
+import {conversionLoad, intialLoad} from "../util/globalStrings.ts";
+
 export interface CurrencyOptions {
   currencyName: string;
   currencyCode: string;
@@ -16,4 +18,4 @@ export interface CurrencyResponsePayload {
   thousand_separator: string;
 }
 
-export type LoadingState = "CURRENCY_CONVERSION"|"INITIAL_LOAD"|"";
+export type LoadingState = conversionLoad|intialLoad|"";
