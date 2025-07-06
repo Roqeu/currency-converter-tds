@@ -1,0 +1,33 @@
+import type {CurrencyOptions, CurrencyResponsePayload} from "../interfaces/ApiInterfaces.ts";
+
+const baseUrl = 'https://api.currencybeacon.com/v1/'
+
+// core fetch function
+async function callCurrencyBeacon(endpoint: string): Promise<any> {
+    const res = await fetch(baseUrl + endpoint, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${import.meta.env.VITE_CURRENCY_BEACON_KEY}`
+        }
+    })
+    return res.json()
+}
+// get currencies
+export async function getCurrencies(): Promise<CurrencyOptions[]> {
+    return new Promise((resolve, reject) => {
+        callCurrencyBeacon('currencies').then(res => {
+            if(res == undefined) reject();
+            resolve(res.response.map((currency: CurrencyResponsePayload) => {return {currencyName: currency.name, currencyCode: currency.short_code}}))
+        })
+    })
+}
+// convert value
+export async function convertValue(sourceCurrency: string, destinationCurrency: string, value: number): Promise<number> {
+    const endpoint = `convert?from=${sourceCurrency}&to=${destinationCurrency}&amount=${value}`;
+    return new Promise((resolve, reject) => {
+        callCurrencyBeacon(endpoint).then(res => {
+            if(res == undefined) reject();
+            resolve(res.response.value)
+        })
+    })
+}
