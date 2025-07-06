@@ -1,5 +1,5 @@
 import './App.css'
-import {Alert, Card, CardContent, CircularProgress, Grid, Modal} from "@mui/material";
+import {Alert, Box, Card, CardContent, CircularProgress, Grid, Modal} from "@mui/material";
 import CurrencyDropdown from "./components/CurrencyDropdown.tsx";
 import {useEffect, useState} from "react";
 import {convertValue, getCurrencies} from "./service/appService.ts";
@@ -60,7 +60,13 @@ function App() {
 
   return (
     <>
-      <Modal open={appLoading===intialLoad} aria-label={"app loading"}><CircularProgress/></Modal>
+      <Modal
+        open={appLoading===intialLoad}
+        aria-label={"app loading"}
+        sx={{display:'flex',alignItems:'center',justifyContent:'center'}}
+      >
+        <CircularProgress/>
+      </Modal>
       {(alertError!=='')&&<Alert severity="error"><>{alertError}</></Alert>}
       <Card>
           <CardContent>
