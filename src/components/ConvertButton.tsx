@@ -20,8 +20,6 @@ export default function ConvertButton() {
   const { setShowErrors, setHideErrors } = useErrorStoreActions();
 
   function convertCurrency() {
-    console.log(convertedCurrency)
-    console.log(sourceCurrency)
     if(convertedCurrency!==""&&sourceCurrency!=="") {
       setHideErrors()
       setAppLoading(conversionLoad)
