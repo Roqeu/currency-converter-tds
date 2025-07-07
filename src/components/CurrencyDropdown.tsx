@@ -37,7 +37,7 @@ export default function CurrencyDropdown({
             }}
             sx={{ borderColor: "red" }}
             renderInput={(params) => (
-              <TextField {...params} error={isError} helperText={(isError)?"Please select a value":""} label={`Select ${currencyType} Currency`} />
+              <TextField {...params} error={isError} helperText={(isError)?"Please select a value":""} label={`Select ${currencyType.toLowerCase()} currency`} />
             )}
         />
     )
